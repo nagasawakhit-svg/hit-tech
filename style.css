@@ -11,13 +11,10 @@ img{max-width:100%}
 .nav{display:flex;align-items:center;gap:24px;font-weight:700;font-size:14px}
 .nav a{color:#071a44}
 .nav-cta{background:#071a44!important;color:#fff!important;padding:12px 18px;border-radius:3px}
-.hero{
-    z-index:10;
-}
 .hero{position:relative;min-height:720px;display:flex;align-items:center;overflow:hidden;background:#06162e;color:#fff}
 .hero-photo{position:absolute;inset:0;background:#06162e}
-.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;opacity:.88;filter:saturate(1.05) contrast(1.05)}
-.hero-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,10,25,.85),rgba(2,10,25,.84) 43%,rgba(2,10,25,.30)),linear-gradient(0deg,rgba(2,10,25,.48),rgba(2,10,25,.06) 45%,rgba(2,10,25,.26))}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;opacity:.74;filter:saturate(1.05) contrast(1.05)}
+.hero-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,10,25,.98),rgba(2,10,25,.84) 43%,rgba(2,10,25,.30)),linear-gradient(0deg,rgba(2,10,25,.48),rgba(2,10,25,.06) 45%,rgba(2,10,25,.26))}
 .hero-content{position:relative;z-index:2;width:min(860px,90vw);padding-left:6vw}
 .eyebrow{font-size:14px;font-weight:800;color:#69b7ff;letter-spacing:.08em}
 .eyebrow.dark{color:#69b7ff}
@@ -30,11 +27,6 @@ img{max-width:100%}
 .btn.secondary{color:#fff}
 .btn.dark{background:#071a44;color:#fff;border-color:#071a44}
 .reasons{padding:60px 6vw;background:#f7fbff}
-.reasons{
-    position:relative;
-    z-index:1;
-}
-background:rgba(0,0,0,.55);
 .reasons h2,.section-title h2{font-size:34px;text-align:center;color:#071a44;margin:0 0 34px}
 .reason-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .reason-grid article{background:#fff;padding:26px;border-radius:16px;box-shadow:0 12px 34px rgba(0,40,90,.08)}
@@ -129,26 +121,4 @@ button{width:100%;border:0;background:#006de5;color:#fff;font-weight:900;font-si
   .page-hero h1{font-size:38px}
   dl,.work-detail dl{grid-template-columns:1fr}
   .phone,.mail{font-size:18px;width:100%}
-}
-.hero-image-only{
-  width:100%;
-  background:#06162e;
-}
-
-.hero-image-only img{
-  width:100%;
-  display:block;
-}
-
-.top-buttons{
-  display:flex;
-  justify-content:center;
-  gap:16px;
-  flex-wrap:wrap;
-  padding:28px 6vw 42px;
-  background:#06162e;
-}
-
-.top-buttons .btn{
-  min-width:180px;
 }
