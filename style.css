@@ -130,3 +130,25 @@ button{width:100%;border:0;background:#006de5;color:#fff;font-weight:900;font-si
   dl,.work-detail dl{grid-template-columns:1fr}
   .phone,.mail{font-size:18px;width:100%}
 }
+.hero-image-only{
+  width:100%;
+  background:#06162e;
+}
+
+.hero-image-only img{
+  width:100%;
+  display:block;
+}
+
+.top-buttons{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  flex-wrap:wrap;
+  padding:28px 6vw 42px;
+  background:#06162e;
+}
+
+.top-buttons .btn{
+  min-width:180px;
+}
