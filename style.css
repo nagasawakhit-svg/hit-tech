@@ -6,11 +6,10 @@ img{max-width:100%}
 .site-header{position:sticky;top:0;z-index:50;min-height:110px;display:flex;align-items:center;justify-content:space-between;padding:12px 6vw;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);box-shadow:0 8px 28px rgba(0,30,80,.08)}
 .brand{display:flex;align-items:center;gap:14px}
 .brand img{
-    height:70px;
-    width:auto;
-    max-width:220px;
-    object-fit:contain;
-    display:block;
+  height:70px;
+  width:auto;
+  object-fit:contain;
+  display:block;
 }
 .brand strong{display:block;font-size:28px;letter-spacing:.08em;color:#071a44;line-height:1}
 .brand span{display:block;font-size:12px;color:#1166b3;font-weight:700}
@@ -66,22 +65,19 @@ img{max-width:100%}
 }.brand strong{font-size:24px}.brand span{font-size:10px}.hero-copy{padding:32px 5vw 42px}.hero-copy h1{font-size:32px}.hero-copy p{font-size:15px}.hero-actions .btn{width:100%}.reason-grid,.service-grid,.stats,.work-grid{grid-template-columns:1fr}.section,.reasons,.page-hero{padding-left:5vw;padding-right:5vw}.page-hero h1{font-size:38px}}
 /* スマホのロゴ切れ対策 */
 @media (max-width:640px){
-  .site-header{
-    min-height:86px !important;
-    padding:10px 5vw !important;
-  }
-
-  .brand{
-    min-width:0 !important;
-  }
-
   .brand img{
-    width:110px !important;
-    height:auto !important;
-    max-height:60px !important;
+    height:52px !important;
+    width:auto !important;
     object-fit:contain !important;
-    border-radius:0 !important;
   }
+}
+
+.brand img{
+  height:70px;
+  width:auto;
+  object-fit:contain;
+  display:block;
+}
 
   .brand strong,
   .brand span{
