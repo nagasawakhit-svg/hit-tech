@@ -186,3 +186,56 @@ button{width:100%;border:0;background:#006de5;color:#fff;font-weight:900;font-si
     object-fit: contain !important;
   }
 }
+.hero,
+.hero-photo,
+.hero-content{
+  display: none !important;
+}
+
+.hero-simple img{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.top-message{
+  background: #06162e;
+  color: #fff;
+  padding: 42px 6vw;
+}
+
+.top-message h1{
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.3;
+  margin: 0 0 24px;
+}
+
+.top-message p{
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.top-buttons{
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+@media(max-width:640px){
+  .top-message{
+    padding: 32px 5vw;
+  }
+
+  .top-message h1{
+    font-size: 34px;
+  }
+
+  .top-message p{
+    font-size: 18px;
+  }
+
+  .top-buttons .btn{
+    width: 100%;
+  }
+}
