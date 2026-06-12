@@ -191,3 +191,18 @@ button{width:100%;border:0;background:#006de5;color:#fff;font-weight:900;font-si
     object-position: center center;
   }
 }
+/* サービス画像を切らずに全体表示 */
+.card img{
+  width: 100% !important;
+  height: 260px !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  background: #f5f8fb !important;
+  padding: 8px !important;
+}
+@media (max-width: 640px){
+  .card img{
+    height: 220px !important;
+    object-fit: contain !important;
+  }
+}
