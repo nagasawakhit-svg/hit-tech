@@ -5,7 +5,11 @@ a{text-decoration:none;color:inherit}
 img{max-width:100%}
 .site-header{position:sticky;top:0;z-index:50;min-height:86px;display:flex;align-items:center;justify-content:space-between;padding:12px 6vw;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);box-shadow:0 8px 28px rgba(0,30,80,.08)}
 .brand{display:flex;align-items:center;gap:14px}
-.brand img{width:76px;height:54px;object-fit:cover;border-radius:8px}
+.brand img{
+    width:76px;
+    height:54px;
+    object-fit:contain;
+}
 .brand strong{display:block;font-size:28px;letter-spacing:.08em;color:#071a44;line-height:1}
 .brand span{display:block;font-size:12px;color:#1166b3;font-weight:700}
 .nav{display:flex;align-items:center;gap:24px;font-weight:700;font-size:14px}
