@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hit-tech.jp/sitemap.xml
