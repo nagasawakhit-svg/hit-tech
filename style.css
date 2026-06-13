@@ -3,14 +3,9 @@ html{scroll-behavior:smooth}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;color:#0c1b33;background:#fff;line-height:1.75}
 a{text-decoration:none;color:inherit}
 img{max-width:100%}
-.site-header{position:sticky;top:0;z-index:50;min-height:110px;display:flex;align-items:center;justify-content:space-between;padding:12px 6vw;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);box-shadow:0 8px 28px rgba(0,30,80,.08)}
+.site-header{position:sticky;top:0;z-index:50;min-height:86px;display:flex;align-items:center;justify-content:space-between;padding:12px 6vw;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);box-shadow:0 8px 28px rgba(0,30,80,.08)}
 .brand{display:flex;align-items:center;gap:14px}
-.brand img{
-  height:70px;
-  width:auto;
-  object-fit:contain;
-  display:block;
-}
+.brand img{width:76px;height:54px;object-fit:cover;border-radius:8px}
 .brand strong{display:block;font-size:28px;letter-spacing:.08em;color:#071a44;line-height:1}
 .brand span{display:block;font-size:12px;color:#1166b3;font-weight:700}
 .nav{display:flex;align-items:center;gap:24px;font-weight:700;font-size:14px}
@@ -58,29 +53,17 @@ img{max-width:100%}
 .footer-brand{font-size:28px;font-weight:900;color:#fff;letter-spacing:.12em}
 .copyright{border-top:1px solid rgba(255,255,255,.12);margin:28px 0 0;padding-top:20px;font-size:13px}
 @media (max-width:980px){.nav{display:none}.reason-grid,.service-grid,.stats{grid-template-columns:1fr 1fr}}
-@media (max-width:640px){.site-header{padding:10px 5vw}..brand img{
-    height:50px;
-    width:auto;
-    max-width:160px;
-}.brand strong{font-size:24px}.brand span{font-size:10px}.hero-copy{padding:32px 5vw 42px}.hero-copy h1{font-size:32px}.hero-copy p{font-size:15px}.hero-actions .btn{width:100%}.reason-grid,.service-grid,.stats,.work-grid{grid-template-columns:1fr}.section,.reasons,.page-hero{padding-left:5vw;padding-right:5vw}.page-hero h1{font-size:38px}}
-/* スマホのロゴ切れ対策 */
-@media (max-width:640px){
+@media (max-width:640px){.site-header{padding:10px 5vw}.brand img{width:64px;height:46px}.brand strong{font-size:24px}.brand span{font-size:10px}.hero-copy{padding:32px 5vw 42px}.hero-copy h1{font-size:32px}.hero-copy p{font-size:15px}.hero-actions .btn{width:100%}.reason-grid,.service-grid,.stats,.work-grid{grid-template-columns:1fr}.section,.reasons,.page-hero{padding-left:5vw;padding-right:5vw}.page-hero h1{font-size:38px}}
 
-  .site-header{
-    min-height:86px !important;
-    padding:10px 5vw !important;
-  }
 
-  .brand{
-    min-width:0 !important;
-  }
-
-  .brand img{
-    width:110px !important;
-    height:auto !important;
-    max-height:60px !important;
-    object-fit:contain !important;
-    border-radius:0 !important;
-  }
-
-}
+/* 社員ログインページ */
+.login-page{min-height:calc(100vh - 86px);display:flex;align-items:center;justify-content:center;padding:60px 6vw;background:linear-gradient(135deg,#06162e,#0d3b6c)}
+.login-card{width:100%;max-width:440px;background:#fff;border-radius:18px;padding:34px;box-shadow:0 18px 50px rgba(0,20,60,.25)}
+.login-card h1{margin:0 0 8px;color:#071a44;font-size:30px}
+.login-card p{margin:0 0 22px;color:#526072}
+.login-card label{display:block;margin:14px 0 6px;font-weight:800;color:#071a44}
+.login-card input{width:100%;padding:14px;border:1px solid #d7e2ef;border-radius:10px;font-size:16px}
+.login-card button{width:100%;margin-top:20px;padding:15px;background:#006de5;color:#fff;border:0;border-radius:10px;font-weight:900;font-size:16px;cursor:pointer}
+.login-error{margin-top:14px;color:#d93025;font-weight:700;min-height:1.5em}
+.login-note{font-size:13px;margin-top:18px!important}
+.logout-btn{border:0;background:#071a44;color:#fff;padding:10px 14px;border-radius:8px;font-weight:800;cursor:pointer}
