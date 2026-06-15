@@ -1,15 +1,28 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
-import { firebaseConfig } from '../firebase-config.js';
+// auth-guard.js
+// Firebaseログイン接続後に有効になります。
+// firebase-config.js が無い環境でもアプリ確認できるよう、エラー時は止めません。
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+(async () => {
+  try {
+    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
+    const { getAuth, onAuthStateChanged, signOut } = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js");
+    const { firebaseConfig } = await import("../firebase-config.js");
 
-onAuthStateChanged(auth, (user) => {
-  if (!user) location.href = '../login.html';
-});
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-window.hitLogout = async function () {
-  await signOut(auth);
-  location.href = '../login.html';
-};
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "../login.html";
+      }
+    });
+
+    window.hitLogout = async function () {
+      await signOut(auth);
+      window.location.href = "../login.html";
+    };
+  } catch (e) {
+    console.warn("Firebase auth guard skipped:", e);
+    window.hitLogout = function(){ window.location.href = "../login.html"; };
+  }
+})();

@@ -1,1 +1,12 @@
-{"name":"負荷試験報告書アプリ","short_name":"負荷試験","start_url":"./","display":"standalone","background_color":"#eef3f8","theme_color":"#063b7a","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icon-512.png","sizes":"512x512","type":"image/png"}]}
+{
+  "name": "HIT 負荷試験報告書アプリ",
+  "short_name": "HIT報告書",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#eef4fb",
+  "theme_color": "#071a44",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}

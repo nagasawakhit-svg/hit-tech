@@ -5,21 +5,103 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>負荷試験報告書アプリ</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
-<header><h1>負荷試験報告書アプリ</h1><button id="logoutBtn">ログアウト</button></header>
+<header class="app-header">
+  <div>
+    <h1>負荷試験報告書アプリ</h1>
+    <p>報告書＋写真帳 作成</p>
+  </div>
+  <button id="logoutBtn" type="button" onclick="window.hitLogout && window.hitLogout()">ログアウト</button>
+</header>
+
 <main>
-<section class="card"><h2>1. 基本情報</h2><div class="grid"><label>宛先<input id="client" placeholder="株式会社〇〇 御中"></label><label>件名<input id="project" placeholder="サンシティ東川口"></label><label>施設名<input id="facility"></label><label>住所<input id="address"></label><label>測定日<input id="date" type="date"></label><label>発電機出力<input id="capacity" placeholder="400 kVA（320 kW）"></label><label>電圧<input id="ratedVoltage" placeholder="200 V"></label><label>メーカー<input id="maker"></label></div></section>
-<section class="card"><h2>2. 点検チェックリスト</h2><div id="checklist"></div></section>
-<section class="card"><h2>3. 運転・測定値</h2><div class="grid"><label>直流電圧<input id="dcVoltage" placeholder="26 V"></label><label>油圧<input id="oilPressure" placeholder="4.1 bar"></label><label>油温<input id="oilTemp" placeholder="99 ℃"></label><label>水温<input id="waterTemp" placeholder="82 ℃"></label><label>周波数<input id="frequency" placeholder="50 Hz"></label><label>回転数<input id="rpm" placeholder="1500 rpm"></label></div></section>
-<section class="card"><h2>4. 負荷試験測定データ</h2><table class="data-table"><thead><tr><th>時分</th><th>負荷率</th><th>負荷 kW</th><th>電圧 V</th><th>R相 A</th><th>S相 A</th><th>T相 A</th></tr></thead><tbody id="loadRows"></tbody></table><button onclick="addLoadRow()">＋ 測定行追加</button></section>
-<section class="card"><h2>5. 写真帳</h2><button onclick="addPhoto()">＋ 写真追加</button><div id="photos"></div></section>
-<section class="card"><h2>6. 備考</h2><textarea id="remarks" placeholder="負荷試験：異常無し 交換推奨：エンジンオイル、オイルフィルター等"></textarea></section>
-<div class="actions"><button onclick="saveDraft()">下書き保存</button><button onclick="window.print()">PDF作成 / 印刷</button></div>
-<div id="printArea"></div>
+  <section class="card">
+    <h2>1. 基本情報</h2>
+    <div class="grid">
+      <label>宛先<input id="client" placeholder="株式会社〇〇 御中"></label>
+      <label>件名<input id="project" placeholder="サンシティ東川口"></label>
+      <label>施設名<input id="facility"></label>
+      <label>住所<input id="address"></label>
+      <label>測定日<input id="date" type="date"></label>
+      <label>発電機出力<input id="capacity" placeholder="400 kVA（320 kW）"></label>
+      <label>電圧<input id="ratedVoltage" placeholder="200 V"></label>
+      <label>メーカー<input id="maker"></label>
+      <label>発電機型式<input id="generatorModel"></label>
+      <label>エンジン型式<input id="engineModel"></label>
+      <label>機関番号<input id="engineNo"></label>
+      <label>担当者<input id="worker"></label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2. 点検チェックリスト</h2>
+    <div id="checklist" class="checklist"></div>
+  </section>
+
+  <section class="card">
+    <h2>3. 運転・測定値</h2>
+    <div class="grid">
+      <label>直流電圧<input id="dcVoltage" placeholder="26 V"></label>
+      <label>油圧<input id="oilPressure" placeholder="0.45 MPa"></label>
+      <label>油温<input id="oilTemp" placeholder="99 ℃"></label>
+      <label>水温<input id="waterTemp" placeholder="82 ℃"></label>
+      <label>周波数<input id="frequency" placeholder="50 Hz"></label>
+      <label>回転数<input id="rpm" placeholder="1500 rpm"></label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>4. 負荷試験測定データ</h2>
+    <p class="hint">表は横にスクロールできます。入力欄を広めにしてあります。</p>
+    <div class="table-scroll">
+      <table class="data-table wide-measure-table">
+        <thead>
+          <tr>
+            <th>時間</th>
+            <th>負荷率</th>
+            <th>負荷kW</th>
+            <th>電圧</th>
+            <th>R相</th>
+            <th>S相</th>
+            <th>T相</th>
+            <th>水温</th>
+            <th>油温</th>
+            <th>油圧</th>
+            <th>周波数</th>
+          </tr>
+        </thead>
+        <tbody id="loadRows"></tbody>
+      </table>
+    </div>
+    <div class="row-actions">
+      <button type="button" onclick="addLoadRow()">＋ 測定行追加</button>
+      <button type="button" onclick="removeLoadRow()">− 最終行削除</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>5. 写真帳</h2>
+    <button type="button" onclick="addPhoto()">＋ 写真追加</button>
+    <div id="photos" class="photos"></div>
+  </section>
+
+  <section class="card">
+    <h2>6. 備考</h2>
+    <textarea id="remarks" placeholder="負荷試験：異常無し　交換推奨：エンジンオイル、オイルフィルター等"></textarea>
+  </section>
+
+  <div class="actions">
+    <button type="button" onclick="saveDraft()">下書き保存</button>
+    <button type="button" onclick="buildPrint()">印刷プレビュー更新</button>
+    <button type="button" onclick="printReport()">PDF作成 / 印刷</button>
+  </div>
+
+  <section id="printArea" class="print-area"></section>
 </main>
-<script src="../firebase-config.js"></script>
-<script type="module" src="app.js"></script>
+
+<script src="app.js?v=3"></script>
+<script type="module" src="auth-guard.js"></script>
 </body>
 </html>

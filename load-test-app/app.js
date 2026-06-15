@@ -1,29 +1,259 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+const checklistItems = [
+  "発電機外観確認",
+  "エンジン外観確認",
+  "冷却水量確認",
+  "潤滑油量確認",
+  "燃料漏れ確認",
+  "冷却水漏れ確認",
+  "潤滑油漏れ確認",
+  "バッテリー確認",
+  "端子緩み確認",
+  "ベルト確認",
+  "排気漏れ確認",
+  "DPF確認",
+  "始動確認",
+  "無負荷運転確認",
+  "負荷試験確認",
+  "停止確認"
+];
 
-if (window.firebaseConfig) {
-  const app = initializeApp(window.firebaseConfig);
-  const auth = getAuth(app);
-  onAuthStateChanged(auth, user => { if (!user) location.href = '../login.html'; });
-  document.getElementById('logoutBtn').onclick = () => signOut(auth).then(()=>location.href='../login.html');
+const loadColumns = [
+  "time","loadRate","loadKw","voltage","rPhase","sPhase","tPhase","waterTemp","oilTemp","oilPressure","frequency"
+];
+
+const defaultRows = [
+  {loadRate:"0%"},
+  {loadRate:"10%"},
+  {loadRate:"20%"},
+  {loadRate:"30%"},
+  {loadRate:"40%"},
+  {loadRate:"50%"},
+  {loadRate:"75%"},
+  {loadRate:"100%"}
+];
+
+let photos = [];
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderChecklist();
+  renderDefaultLoadRows();
+  loadDraft();
+  document.addEventListener("input", debounce(saveDraft, 700));
+});
+
+function renderChecklist(){
+  const box = document.getElementById("checklist");
+  box.innerHTML = checklistItems.map((name, i) => `
+    <label class="check-item">
+      <input type="checkbox" id="check_${i}">
+      <span>${name}</span>
+    </label>
+  `).join("");
 }
 
-const checkItems = [
-'空気吸気口付近に吸気可能性の有る建物等無し','排気出口付近に可燃物等無し','排風筒付近に可燃物等無し','発電機装置外観に著しい損傷無し','発電機装置周辺の異臭無し','発電装置表示灯が以下の点灯状態確認','試験モード切替確認','発電装置に浸水・漏水・ひび割れ無し','発電装置に発錆無し','発電装置に油漏れ無し','冷却水漏れ無し','燃料油量確認','冷却水確認','ベルト張り損傷及び緩み無し','自動始動発電盤の計器・表示灯割れ無し','オイル量確認','発電機を始動できるか','故障項目の表示確認','交流電圧計表示','直流電圧計表示','油圧計表示','液晶表示の周波数表示','電流計の動作確認','油温計表示','水温計表示','負荷異常確認','停止ボタン確認','自動モードへの変更','発電装置扉閉止確認','発電装置周囲に異常無し','燃料油量確認（終了時）'
-];
-const checklist = document.getElementById('checklist');
-checkItems.forEach((t,i)=>{ checklist.insertAdjacentHTML('beforeend',`<div class="check-item"><span>${i+1}</span><span>${t}</span><input type="checkbox" class="chk" checked></div>`)});
-const loadRows = document.getElementById('loadRows');
-window.addLoadRow = function(vals=['','','','','','','']){ const tr=document.createElement('tr'); tr.innerHTML=vals.map(v=>`<td><input value="${v}"></td>`).join(''); loadRows.appendChild(tr); };
-addLoadRow(['10時20分〜','10%以上','32.3','201','93.3','93.7','92.9']);
-addLoadRow(['10時25分〜','20%以上','6.6','200','185.4','19.0','185.5']);
-addLoadRow(['10時30分〜','30%以上','63.4','200','277.9','183.1','277.8']);
-window.addPhoto = function(){ const id=Date.now(); const box=document.createElement('div'); box.className='photo-card'; box.innerHTML=`<div><input type="file" accept="image/*" capture="environment"><img></div><div><label>写真タイトル<input class="ptitle" placeholder="発電機外観写真"></label><label>写真備考<textarea class="pnote" placeholder="設置場所：地上"></textarea></label><button type="button" onclick="this.closest('.photo-card').remove()">削除</button></div>`; const file=box.querySelector('input[type=file]'); const img=box.querySelector('img'); file.onchange=e=>{const r=new FileReader();r.onload=()=>img.src=r.result;r.readAsDataURL(e.target.files[0]);}; document.getElementById('photos').appendChild(box); };
-window.saveDraft = function(){ const data={}; document.querySelectorAll('input,textarea').forEach((el,i)=>{ if(el.type!=='file') data[i]=el.value; }); localStorage.setItem('loadTestDraft',JSON.stringify(data)); alert('下書き保存しました'); };
-function val(id){return document.getElementById(id)?.value||''}
-window.onbeforeprint = function(){ const rows=[...loadRows.querySelectorAll('tr')].map(tr=>[...tr.querySelectorAll('input')].map(i=>i.value)); const checks=[...document.querySelectorAll('.check-item')].map((r,i)=>[i+1,r.children[1].textContent,r.querySelector('input').checked?'✓':'']); const photos=[...document.querySelectorAll('.photo-card')].map((p,i)=>({no:i+1,src:p.querySelector('img').src,title:p.querySelector('.ptitle').value,note:p.querySelector('.pnote').value})).filter(p=>p.src);
-let html=`<section class="page"><div>${val('client')} 御中</div><div class="title">負荷試験機による<br>発電機の出力及び電流値測定報告書</div><p>件名：${val('project')}</p><p>発電機出力：${val('capacity')}　${val('ratedVoltage')}</p><p>測定日：${val('date')}</p></section>`;
-html+=`<section class="page"><h2>非常用発電機確認表</h2><table class="print-table"><tr><th>No.</th><th>点検項目</th><th>チェック</th></tr>${checks.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</table></section>`;
-html+=`<section class="page"><h2>負荷試験測定データ表</h2><table class="print-table"><tr><th>施設名</th><td colspan="6">${val('facility')}</td></tr><tr><th>住所</th><td colspan="6">${val('address')}</td></tr><tr><th>発電機出力容量</th><td colspan="6">${val('capacity')}</td></tr><tr><th>時分</th><th>負荷率</th><th>負荷</th><th>電圧</th><th>R相(A)</th><th>S相(A)</th><th>T相(A)</th></tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table><h3>運転値</h3><p>直流電圧：${val('dcVoltage')}　油圧：${val('oilPressure')}　油温：${val('oilTemp')}　水温：${val('waterTemp')}　周波数：${val('frequency')}　回転数：${val('rpm')}</p><h3>備考</h3><p>${val('remarks')}</p></section>`;
-photos.forEach(p=>{html+=`<section class="page"><div class="photo-print"><img src="${p.src}"><div class="photo-info"><div>No. ${p.no}</div><div><b>写真タイトル</b><br>${p.title}</div><div><b>写真備考</b><br>${p.note}</div></div></div></section>`});
-document.getElementById('printArea').innerHTML=html; };
+function renderDefaultLoadRows(){
+  const tbody = document.getElementById("loadRows");
+  tbody.innerHTML = "";
+  defaultRows.forEach(row => addLoadRow(row));
+}
+
+function addLoadRow(values = {}){
+  const tbody = document.getElementById("loadRows");
+  const tr = document.createElement("tr");
+  tr.innerHTML = loadColumns.map(col => {
+    const cls = col === "time" ? "time-input" : "";
+    const type = col === "time" ? "text" : "text";
+    const placeholderMap = {
+      time:"10:00", loadRate:"30%", loadKw:"96", voltage:"200",
+      rPhase:"120", sPhase:"120", tPhase:"120",
+      waterTemp:"82", oilTemp:"95", oilPressure:"0.45", frequency:"50.0"
+    };
+    return `<td><input class="${cls}" data-load-col="${col}" type="${type}" inputmode="decimal" placeholder="${placeholderMap[col] || ""}" value="${values[col] || ""}"></td>`;
+  }).join("");
+  tbody.appendChild(tr);
+}
+
+function removeLoadRow(){
+  const tbody = document.getElementById("loadRows");
+  if(tbody.children.length > 1) tbody.lastElementChild.remove();
+  saveDraft();
+}
+
+function addPhoto(){
+  const id = `photo_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+  photos.push({id, src:"", title:"", note:""});
+  renderPhotos();
+  saveDraft();
+}
+
+function removePhoto(id){
+  photos = photos.filter(p => p.id !== id);
+  renderPhotos();
+  saveDraft();
+}
+
+function renderPhotos(){
+  const box = document.getElementById("photos");
+  box.innerHTML = photos.map((p, index) => `
+    <div class="photo-row" data-photo-id="${p.id}">
+      ${p.src ? `<img class="photo-preview" src="${p.src}" alt="写真${index+1}">` : `<div class="photo-preview"></div>`}
+      <div class="photo-meta">
+        <strong>No.${index + 1}</strong>
+        <label>写真選択<input type="file" accept="image/*" onchange="setPhotoFile('${p.id}', this)"></label>
+        <label>タイトル<input value="${escapeHtml(p.title || "")}" oninput="setPhotoText('${p.id}','title',this.value)" placeholder="例）発電機外観"></label>
+        <label>写真備考<textarea oninput="setPhotoText('${p.id}','note',this.value)" placeholder="例）負荷試験実施状況">${escapeHtml(p.note || "")}</textarea></label>
+        <button type="button" class="photo-remove" onclick="removePhoto('${p.id}')">削除</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function setPhotoFile(id, input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const photo = photos.find(p => p.id === id);
+    if(photo){
+      photo.src = reader.result;
+      renderPhotos();
+      saveDraft();
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function setPhotoText(id, key, value){
+  const photo = photos.find(p => p.id === id);
+  if(photo){
+    photo[key] = value;
+    saveDraft();
+  }
+}
+
+function collectData(){
+  const ids = [
+    "client","project","facility","address","date","capacity","ratedVoltage","maker",
+    "generatorModel","engineModel","engineNo","worker",
+    "dcVoltage","oilPressure","oilTemp","waterTemp","frequency","rpm","remarks"
+  ];
+  const data = {};
+  ids.forEach(id => data[id] = document.getElementById(id)?.value || "");
+  data.checks = checklistItems.map((name, i) => ({
+    name,
+    checked: !!document.getElementById(`check_${i}`)?.checked
+  }));
+  data.loads = [...document.querySelectorAll("#loadRows tr")].map(tr => {
+    const row = {};
+    tr.querySelectorAll("input[data-load-col]").forEach(input => row[input.dataset.loadCol] = input.value);
+    return row;
+  });
+  data.photos = photos;
+  return data;
+}
+
+function applyData(data){
+  if(!data) return;
+  Object.keys(data).forEach(id => {
+    const el = document.getElementById(id);
+    if(el && typeof data[id] === "string") el.value = data[id];
+  });
+  if(Array.isArray(data.checks)){
+    data.checks.forEach((c, i) => {
+      const el = document.getElementById(`check_${i}`);
+      if(el) el.checked = !!c.checked;
+    });
+  }
+  if(Array.isArray(data.loads) && data.loads.length){
+    document.getElementById("loadRows").innerHTML = "";
+    data.loads.forEach(row => addLoadRow(row));
+  }
+  if(Array.isArray(data.photos)){
+    photos = data.photos;
+    renderPhotos();
+  }
+}
+
+function saveDraft(){
+  localStorage.setItem("hit_load_test_draft_v3", JSON.stringify(collectData()));
+}
+
+function loadDraft(){
+  try{
+    const raw = localStorage.getItem("hit_load_test_draft_v3");
+    if(raw) applyData(JSON.parse(raw));
+  }catch(e){}
+}
+
+function buildPrint(){
+  const d = collectData();
+  const printArea = document.getElementById("printArea");
+
+  const infoRows = [
+    ["宛先", d.client], ["件名", d.project], ["施設名", d.facility], ["住所", d.address],
+    ["測定日", d.date], ["担当者", d.worker], ["メーカー", d.maker], ["発電機型式", d.generatorModel],
+    ["エンジン型式", d.engineModel], ["機関番号", d.engineNo], ["発電機出力", d.capacity], ["定格電圧", d.ratedVoltage]
+  ];
+
+  const checkRows = d.checks.map(c => `<tr><td>${escapeHtml(c.name)}</td><td>${c.checked ? "✓" : ""}</td></tr>`).join("");
+
+  const loadHead = `<tr><th>時間</th><th>負荷率</th><th>負荷kW</th><th>電圧</th><th>R相</th><th>S相</th><th>T相</th><th>水温</th><th>油温</th><th>油圧</th><th>周波数</th></tr>`;
+  const loadRows = d.loads.map(r => `<tr>${loadColumns.map(c => `<td>${escapeHtml(r[c] || "")}</td>`).join("")}</tr>`).join("");
+
+  const photoRows = d.photos.map((p, i) => `
+    <div class="print-photo-row">
+      <div>${p.src ? `<img src="${p.src}">` : ""}</div>
+      <div>
+        <strong>No.${i + 1}</strong><br>
+        <strong>${escapeHtml(p.title || "")}</strong>
+        <p>${escapeHtml(p.note || "").replace(/\n/g,"<br>")}</p>
+      </div>
+    </div>
+  `).join("");
+
+  printArea.innerHTML = `
+    <div class="print-page">
+      <h1>負荷試験報告書</h1>
+      <table class="print-info">${infoRows.map(r => `<tr><th>${r[0]}</th><td>${escapeHtml(r[1] || "")}</td></tr>`).join("")}</table>
+      <h2>運転・測定値</h2>
+      <table class="print-info">
+        <tr><th>直流電圧</th><td>${escapeHtml(d.dcVoltage)}</td><th>油圧</th><td>${escapeHtml(d.oilPressure)}</td></tr>
+        <tr><th>油温</th><td>${escapeHtml(d.oilTemp)}</td><th>水温</th><td>${escapeHtml(d.waterTemp)}</td></tr>
+        <tr><th>周波数</th><td>${escapeHtml(d.frequency)}</td><th>回転数</th><td>${escapeHtml(d.rpm)}</td></tr>
+      </table>
+    </div>
+    <div class="print-page">
+      <h2>点検チェックリスト</h2>
+      <table class="print-table"><tr><th>項目</th><th>確認</th></tr>${checkRows}</table>
+    </div>
+    <div class="print-page">
+      <h2>負荷試験測定データ</h2>
+      <table class="print-table">${loadHead}${loadRows}</table>
+      <h2>備考</h2>
+      <p>${escapeHtml(d.remarks || "").replace(/\n/g,"<br>")}</p>
+    </div>
+    <div class="print-page">
+      <h2>写真帳</h2>
+      ${photoRows || "<p>写真なし</p>"}
+    </div>
+  `;
+}
+
+function printReport(){
+  buildPrint();
+  window.print();
+}
+
+function debounce(fn, delay){
+  let timer;
+  return function(){
+    clearTimeout(timer);
+    timer = setTimeout(fn, delay);
+  }
+}
+
+function escapeHtml(value){
+  return String(value ?? "").replace(/[&<>"']/g, s => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[s]));
+}
